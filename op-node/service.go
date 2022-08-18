@@ -57,6 +57,7 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to load l2 endpoints info: %v", err)
 	}
+	log.Warn("ctx.GlobalBool RPC enable admin", "value", ctx.GlobalBool(flags.RPCEnableAdmin.Name))
 
 	cfg := &node.Config{
 		L1:     l1Endpoint,

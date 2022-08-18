@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum-optimism/optimism/op-node/metrics"
 
 	"github.com/ethereum-optimism/optimism/op-node/p2p"
@@ -50,6 +51,7 @@ func newRPCServer(ctx context.Context, rpcCfg *RPCConfig, rollupCfg *rollup.Conf
 }
 
 func (s *rpcServer) EnableAdminAPI(api *adminAPI) {
+	s.log.Warn("XKCD: enable admin API called")
 	s.apis = append(s.apis, rpc.API{
 		Namespace:     "admin",
 		Version:       "",
@@ -71,6 +73,7 @@ func (s *rpcServer) EnableP2P(backend *p2p.APIBackend) {
 
 func (s *rpcServer) Start() error {
 	srv := rpc.NewServer()
+	spew.Dump(s.apis)
 	if err := node.RegisterApis(s.apis, nil, srv); err != nil {
 		return err
 	}
