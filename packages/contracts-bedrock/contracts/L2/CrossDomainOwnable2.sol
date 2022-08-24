@@ -14,9 +14,8 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
  *         is used directly.
  */
 abstract contract CrossDomainOwnable2 is Ownable {
-    L2CrossDomainMessenger internal messenger = L2CrossDomainMessenger(
-        Predeploys.L2_CROSS_DOMAIN_MESSENGER
-    );
+    L2CrossDomainMessenger internal messenger =
+        L2CrossDomainMessenger(Predeploys.L2_CROSS_DOMAIN_MESSENGER);
 
     /**
      * @notice Overrides the implementation of the `onlyOwner` modifier
@@ -24,7 +23,7 @@ abstract contract CrossDomainOwnable2 is Ownable {
      *         is the owner of the contract. This value is set
      *         to the caller of the L1CrossDomainMessenger.
      */
-    function _checkOwner() internal override view {
+    function _checkOwner() internal view override {
         require(
             owner() == messenger.xDomainMessageSender(),
             "CrossDomainOwnable2: caller is not the owner"

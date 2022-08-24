@@ -18,7 +18,7 @@ abstract contract CrossDomainOwnable is Ownable {
      *         to check that the unaliased `msg.sender` is the owner
      *         of the contract.
      */
-    function _checkOwner() internal override view {
+    function _checkOwner() internal view override {
         require(
             owner() == AddressAliasHelper.undoL1ToL2Alias(msg.sender),
             "CrossDomainOwnable: caller is not the owner"
