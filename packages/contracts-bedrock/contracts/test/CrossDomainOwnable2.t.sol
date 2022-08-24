@@ -4,8 +4,6 @@ pragma solidity 0.8.15;
 import { CommonTest, Messenger_Initializer } from "./CommonTest.t.sol";
 import { CrossDomainOwnable2 } from "../L2/CrossDomainOwnable2.sol";
 import { AddressAliasHelper } from "../vendor/AddressAliasHelper.sol";
-import { Vm } from "forge-std/Vm.sol";
-import { Bytes32AddressLib } from "@rari-capital/solmate/src/utils/Bytes32AddressLib.sol";
 import { Hashing } from "../libraries/Hashing.sol";
 
 contract XDomainSetter2 is CrossDomainOwnable2 {
@@ -32,7 +30,7 @@ contract CrossDomainOwnable2_Test is Messenger_Initializer {
 
     function test_revertOnlyOwner() external {
         uint256 nonce = 0;
-        address sender = AddressAliasHelper.applyL1ToL2Alias(bob);
+        address sender = bob;
         address target = address(setter);
         uint256 value = 0;
         uint256 minGasLimit = 0;
@@ -79,7 +77,7 @@ contract CrossDomainOwnable2_Test is Messenger_Initializer {
         vm.prank(AddressAliasHelper.applyL1ToL2Alias(address(L1Messenger)));
         L2Messenger.relayMessage(
             1,
-            AddressAliasHelper.applyL1ToL2Alias(owner),
+            owner,
             address(setter),
             0,
             0,

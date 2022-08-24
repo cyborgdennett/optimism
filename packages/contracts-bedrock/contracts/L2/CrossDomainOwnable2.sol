@@ -3,7 +3,6 @@ pragma solidity 0.8.15;
 
 import { Predeploys } from "../libraries/Predeploys.sol";
 import { L2CrossDomainMessenger } from "./L2CrossDomainMessenger.sol";
-import { AddressAliasHelper } from "../vendor/AddressAliasHelper.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
@@ -26,11 +25,8 @@ abstract contract CrossDomainOwnable2 is Ownable {
      *         to the caller of the L1CrossDomainMessenger.
      */
     function _checkOwner() internal override view {
-        address sender = AddressAliasHelper.undoL1ToL2Alias(
-            messenger.xDomainMessageSender()
-        );
         require(
-            owner() == sender,
+            owner() == messenger.xDomainMessageSender(),
             "CrossDomainOwnable2: caller is not the owner"
         );
     }
