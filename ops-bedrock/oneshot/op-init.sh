@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+#!/command/with-contenv bash
+
+set -exu
 
 printenv
 
