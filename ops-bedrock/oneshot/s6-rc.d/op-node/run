@@ -1,0 +1,9 @@
+#!/command/with-contenv bash
+set -exu
+
+export OP_NODE_L2_ETH_RPC=http://0.0.0.0:$OP_GETH_HTTP_PORT
+export OP_NODE_L2_ENGINE_RPC=http://0.0.0.0:$OP_GETH_HTTP_PORT
+export OP_NODE_L2_ENGINE_AUTH=/etc/secrets/jwt-secret.txt
+export OP_NODE_P2P_PRIV_PATH=/etc/secrets/p2p-private-key.txt
+
+exec op-node

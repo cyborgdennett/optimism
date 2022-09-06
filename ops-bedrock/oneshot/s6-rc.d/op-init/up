@@ -1,0 +1,2 @@
+#!/commands/with-contenv bash
+/usr/local/bin/op-init.sh
