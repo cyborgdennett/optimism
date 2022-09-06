@@ -2,7 +2,8 @@
 
 set -exu
 
-env
+echo "Environment:"
+printenv
 
 GETH_DATA_DIR=/db
 CHAIN_ID=$(cat "$GENESIS_FILE_PATH" | jq -r .config.chainId)
