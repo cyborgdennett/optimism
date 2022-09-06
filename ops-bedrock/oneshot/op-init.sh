@@ -11,7 +11,7 @@ BLOCK_SIGNER_PRIVATE_KEY="3e4bde571b86929bf08e2aaad9a6a1882664cd5e65b96fff7d03e1
 mkdir -p /etc/secrets
 
 if [ "$OP_NODE_L1_ETH_RPC" = "dummy" ]; then
-	echo "You must specify the OP_NODE_L1_RPC environment variable."
+	echo "You must specify the OP_NODE_L1_ETH_RPC environment variable."
 	exit 1	
 fi
 
