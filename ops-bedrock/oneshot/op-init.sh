@@ -1,8 +1,6 @@
 #!/command/with-contenv bash
 
-set -exu
-
-printenv
+set -eu
 
 GETH_DATA_DIR=/db
 GETH_CHAINDATA_DIR="$GETH_DATA_DIR/geth/chaindata"
