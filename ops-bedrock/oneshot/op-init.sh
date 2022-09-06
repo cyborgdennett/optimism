@@ -40,7 +40,7 @@ fi
 if [ ! -d "$GETH_CHAINDATA_DIR" ]; then
 	echo "$GETH_CHAINDATA_DIR missing, running init"
 	echo "Initializing genesis."
-	geth --verbosity="$VERBOSITY" init \
+	geth --verbosity="$OP_GETH_VERBOSITY" init \
 		--datadir="$GETH_DATA_DIR" \
 		"$GENESIS_FILE_PATH"
 else
