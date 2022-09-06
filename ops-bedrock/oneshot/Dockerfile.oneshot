@@ -41,7 +41,8 @@ COPY ./op-init.sh /usr/local/bin/op-init.sh
 RUN cd /tmp && \
 	sha256sum -c *.sha256 && \
 	tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
-	tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
+	tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz && \
+	chmod +x /usr/local/bin/op-init.sh
 
 ENV OP_NODE_L1_ETH_RPC=dummy \
 	OP_NODE_ROLLUP_CONFIG=/etc/op-node/rollup.json \
