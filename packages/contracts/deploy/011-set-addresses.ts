@@ -87,6 +87,9 @@ const deployFn: DeployFunction = async (hre) => {
   // Wait for ownership to be transferred to the AddressDictator contract.
   await awaitCondition(
     async () => {
+      console.log(
+        'Attempting for Lib_AddressManager to be set to AddressDictator'
+      )
       return hexStringEquals(
         await Lib_AddressManager.owner(),
         AddressDictator.address

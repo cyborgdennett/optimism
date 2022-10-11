@@ -9,6 +9,8 @@ const deployFn: DeployFunction = async (hre) => {
   const { deploy } = hre.deployments
   const { deployer } = await hre.getNamedAccounts()
 
+  console.log('Printing numDeployConfigConfirmations.')
+  console.log(hre.deployConfig.numDeployConfirmations)
   await deploy(names.unmanaged.Lib_AddressManager, {
     from: deployer,
     args: [],

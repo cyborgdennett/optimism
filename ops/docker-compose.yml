@@ -11,22 +11,31 @@ x-system-addr-env: &system-addr-env
 
 services:
   # this is a helper service used because there's no official hardhat image
+  # l1_chain:
+  #   image: ethereumoptimism/hardhat:${DOCKER_TAG_HARDHAT:-latest}
+  #   build:
+  #     context: ./docker/hardhat
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - ./envs/l1_chain.env
+  #   ports:
+  #     # expose the service to the host for integration testing
+  #     - ${L1CHAIN_HTTP_PORT:-9545}:8545
   l1_chain:
-    image: ethereumoptimism/hardhat:${DOCKER_TAG_HARDHAT:-latest}
     build:
-      context: ./docker/hardhat
+      context: ./docker/hardhat_2
       dockerfile: Dockerfile
     env_file:
       - ./envs/l1_chain.env
     ports:
-      # expose the service to the host for integration testing
       - ${L1CHAIN_HTTP_PORT:-9545}:8545
+      - ${L1CHAIN_WS_PORT:-9546}:8546
 
   deployer:
     depends_on:
       - l1_chain
     build:
-      context: ..
+      context: ../../optimism # Set context to local optimism clone, so that changes will be used in build !! DOES NOT WORK :(
       dockerfile: ./ops/docker/Dockerfile.packages
       target: deployer
     image: ethereumoptimism/deployer:${DOCKER_TAG_DEPLOYER:-latest}
@@ -35,7 +44,9 @@ services:
       # Env vars for the deployment script.
       CONTRACTS_RPC_URL: http://l1_chain:8545
       CONTRACTS_DEPLOYER_KEY: 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-      CONTRACTS_TARGET_NETWORK: 'local'
+      CONTRACTS_TARGET_NETWORK: 'locallocal' # This will fail, because standard l1_blocktime is set to 15, We use 5. We should set our own target_network. Because context is set to local, and the local.ts is edited, it mightwork
+      CONTRACTS_CHAIN_ID: 9090 # Casper added this
+      AUTOMATICALLY_TRANSFER_OWNERSHIP: 'true' # Casper: Added for deploy 011.
     ports:
       # expose the service to the host for getting the contract addrs
       - ${DEPLOYER_PORT:-8080}:8081
@@ -46,7 +57,7 @@ services:
       - deployer
       - l2geth
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./ops/docker/Dockerfile.packages
       target: data-transport-layer
     image: ethereumoptimism/data-transport-layer:${DOCKER_TAG_DATA_TRANSPORT_LAYER:-latest}
@@ -72,7 +83,8 @@ services:
       - l1_chain
       - deployer
     build:
-      context: ..
+      # context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./l2geth/Dockerfile
     image: ethereumoptimism/l2geth:${DOCKER_TAG_L2GETH:-latest}
     # override with the geth script and the env vars required for it
@@ -106,7 +118,7 @@ services:
     deploy:
       replicas: 0
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./ops/docker/Dockerfile.packages
       target: message-relayer
     image: ethereumoptimism/message-relayer:${DOCKER_TAG_MESSAGE_RELAYER:-latest}
@@ -115,7 +127,7 @@ services:
       MESSAGE_RELAYER__L1_RPC_PROVIDER: http://l1_chain:8545
       MESSAGE_RELAYER__L2_RPC_PROVIDER: http://l2geth:8545
       MESSAGE_RELAYER__L1_WALLET: '0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97'
-      RETRIES: 60
+      RETRIES: 250
 
   fault_detector:
     depends_on:
@@ -124,7 +136,7 @@ services:
     deploy:
       replicas: 0
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./ops/docker/Dockerfile.packages
       target: fault-detector
     image: ethereumoptimism/fault-detector:${DOCKER_TAG_FAULT_DETECTOR:-latest}
@@ -143,7 +155,7 @@ services:
     deploy:
       replicas: 1
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./l2geth/Dockerfile
     image: ethereumoptimism/l2geth:${DOCKER_TAG_L2GETH:-latest}
     entrypoint: sh ./geth.sh
@@ -170,7 +182,7 @@ services:
     deploy:
       replicas: 1
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./l2geth/Dockerfile
     image: ethereumoptimism/l2geth:${DOCKER_TAG_L2GETH:-latest}
     entrypoint: sh ./geth.sh
@@ -197,7 +209,7 @@ services:
     deploy:
       replicas: 0
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./ops/docker/Dockerfile.packages
       target: replica-healthcheck
     image: ethereumoptimism/replica-healthcheck:${DOCKER_TAG_REPLICA_HEALTHCHECK:-latest}
@@ -211,7 +223,7 @@ services:
     deploy:
       replicas: 0
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./ops/docker/Dockerfile.packages
       target: integration-tests
     image: ethereumoptimism/integration-tests:${DOCKER_TAG_INTEGRATION_TESTS:-latest}
@@ -237,7 +249,7 @@ services:
     deploy:
       replicas: 0
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./gas-oracle/Dockerfile
     image: ethereumoptimism/gas-oracle:${DOCKER_TAG_GAS_ORACLE:-latest}
     environment:
@@ -252,7 +264,7 @@ services:
       - deployer
       - l2geth
     build:
-      context: ..
+      context: https://github.com/ethereum-optimism/optimism.git
       dockerfile: ./batch-submitter/Dockerfile
     image: ethereumoptimism/batch-submitter-service:${DOCKER_TAG_BATCH_SUBMITTER_SERVICE:-latest}
     entrypoint: ./batch-submitter.sh

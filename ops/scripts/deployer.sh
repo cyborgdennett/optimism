@@ -24,7 +24,13 @@ curl \
 echo "Connected to L1."
 echo "Building deployment command."
 
-DEPLOY_CMD="npx hardhat deploy --network $CONTRACTS_TARGET_NETWORK"
+# Set the right l1Blocktime
+# cat ./deploy-config/local.ts > ./deploy-config/locallocal.ts
+# sed -i 's/l1BlockTimeSeconds: 15/l1BlockTimeSeconds: 5/g' ./deploy-config/locallocal.ts
+cp ./deploy-config/local.ts ./deploy-config/locallocal.ts
+# cat ./deploy-config/locallocal.ts
+
+DEPLOY_CMD="npx hardhat deploy --network $CONTRACTS_TARGET_NETWORK --verbose"
 
 echo "Deploying contracts. Deployment command:"
 echo "$DEPLOY_CMD"

@@ -23,6 +23,7 @@ dotenv.config()
 const enableGasReport = !!process.env.ENABLE_GAS_REPORT
 const privateKey = process.env.PRIVATE_KEY || '0x' + '11'.repeat(32) // this is to avoid hardhat error
 const deploy = process.env.DEPLOY_DIRECTORY || 'deploy'
+const contractsChainId = process.env.CONTRACTS_CHAIN_ID | 0
 
 const config: HardhatUserConfig = {
   networks: {
@@ -34,6 +35,13 @@ const config: HardhatUserConfig = {
     optimism: {
       url: 'http://127.0.0.1:8545',
       saveDeployments: false,
+    },
+    distro: {
+      chainId: 31337,
+      url: 'http://127.0.0.1:9545',
+      live: true,
+      saveDeployments: true,
+      accounts: [privateKey],
     },
     'optimism-kovan': {
       chainId: 69,
@@ -238,6 +246,7 @@ if (
   process.env.CONTRACTS_RPC_URL
 ) {
   config.networks[process.env.CONTRACTS_TARGET_NETWORK] = {
+    chainId: contractsChainId,
     accounts: [process.env.CONTRACTS_DEPLOYER_KEY],
     url: process.env.CONTRACTS_RPC_URL,
     live: true,
