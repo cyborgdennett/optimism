@@ -10,5 +10,5 @@ RUN chmod +x run.sh
 
 EXPOSE 8545
 
-ENTRYPOINT ["./run.sh"]
+# ENTRYPOINT ["./run.sh"]
 # ENTRYPOINT ["/bin/sh", "-c"]

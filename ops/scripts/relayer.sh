@@ -2,7 +2,7 @@
 
 set -e
 
-RETRIES=${RETRIES:-60}
+RETRIES=${RETRIES:-150}
 
 # waits for l2geth to be up
 curl \

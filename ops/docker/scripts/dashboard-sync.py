@@ -4,9 +4,16 @@ import urllib.request
 
 dashboard_list=[
   {
-   'name': 'Single Geth',
-   'filename': 'single_geth.json',
-   'url': 'https://gist.githubusercontent.com/karalabe/1e26f9ea5c842fb118584edadc454e18/raw/6754e6d5c59328e19ad3a8a29a8e7e41fd46e202/geth.json'
+   'name': 'Geth Dashboard Ethereum',
+   'filename': 'single_geth_eth.json',
+   'url': 'https://grafana.com/api/dashboards/13877/revisions/1/download',
+   'replacement': 'InfluxDB_eth'
+  },
+  {
+   'name': 'Geth Dashboard Optimism',
+   'filename': 'single_geth_opt.json',
+   'url': 'https://grafana.com/api/dashboards/13877/revisions/1/download',
+   'replacement': 'InfluxDB'
   }
 ]
 dashboard_path="/grafana-dashboards"
@@ -24,7 +31,9 @@ for dashboard in dashboard_list:
   with urllib.request.urlopen(dashboard['url']) as f:
     response = f.read()
     decoded_html = response.decode('utf-8')
-    data = decoded_html.replace('${DS_INFLUXDB}', 'InfluxDB')
+    data = decoded_html.replace('${DS_INFLUXDB}', dashboard['replacement'])
+    data = data.replace("Geth Dashboard", dashboard['name'])
+    data = data.replace("QC1Arp5Wk", "QC1Arp5Wk"+dashboard['replacement'])
     d_file = open(os.path.join(dashboard_path, dashboard['filename']),'w')
     d_file.write(data)
     d_file.close()

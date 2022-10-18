@@ -4,6 +4,9 @@ services:
   l2geth:
     command: ["--metrics", "--metrics.influxdb", "--metrics.influxdb.endpoint", "http://influxdb:8086", "--metrics.influxdb.database", "l2geth"]
 
+  l1_chain:
+    command: ["--metrics", "--metrics.influxdb", "--metrics.influxdb.endpoint", "http://influxdb_eth:8086", "--metrics.influxdb.database", "l1_chain"] #, "--metrics.influxdb.username", "admin", "--metrics.influxdb.password", "ethereum"]
+
   batch_submitter:
     environment:
       BATCH_SUBMITTER_RUN_METRICS_SERVER: "true"
@@ -28,6 +31,13 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb
 
+  influxdb_eth:
+    image: quay.io/influxdb/influxdb:1.6
+    env_file:
+      -  ./envs/metrics_eth.env
+    volumes:
+      - influxdb_data_eth:/var/lib/influxdb
+
   prometheus:
     image: prom/prometheus
     env_file:
@@ -48,6 +58,7 @@ services:
       - grafana_dashboards:/grafana-dashboards
 
 volumes:
+  influxdb_data_eth:
   influxdb_data:
   grafana_data:
   grafana_dashboards:

@@ -27,6 +27,7 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./envs/l1_chain.env
+    entrypoint: ./run.sh
     ports:
       - ${L1CHAIN_HTTP_PORT:-9545}:8545
       - ${L1CHAIN_WS_PORT:-9546}:8546
@@ -46,7 +47,7 @@ services:
       CONTRACTS_DEPLOYER_KEY: 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
       CONTRACTS_TARGET_NETWORK: 'locallocal' # This will fail, because standard l1_blocktime is set to 15, We use 5. We should set our own target_network. Because context is set to local, and the local.ts is edited, it mightwork
       CONTRACTS_CHAIN_ID: 9090 # Casper added this
-      AUTOMATICALLY_TRANSFER_OWNERSHIP: 'true' # Casper: Added for deploy 011.
+      AUTOMATICALLY_TRANSFER_OWNERSHIP: 'true' # Casper: Added for deploy.
     ports:
       # expose the service to the host for getting the contract addrs
       - ${DEPLOYER_PORT:-8080}:8081
@@ -62,7 +63,7 @@ services:
       target: data-transport-layer
     image: ethereumoptimism/data-transport-layer:${DOCKER_TAG_DATA_TRANSPORT_LAYER:-latest}
     # override with the dtl script and the env vars required for it
-    entrypoint: ./dtl.sh
+    entrypoint: sh ./dtl.sh
     env_file:
       - ./envs/dtl.env
     # set the rest of the env vars for the network whcih do not

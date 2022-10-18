@@ -34,9 +34,17 @@ geth  --datadir data \
       --mine \
       --password password.txt \
       --verbosity 4 \
-      --nodiscover
+      --nodiscover \
+      "$@"
+
       # --miner.gasprice 0 \
 
-#test
+      # --metrics \
+      # --metrics.influxdb \
+      # --metrics.influxdb.endpoint "http://0.0.0.0:8087" \
+      # --metrics.influxdb.database "l1_chain"
+      # --metrics.influxdb.username "admin" \
+      # --metrics.influxdb.password "ethereum"
 
+#test
 # sleep 5
