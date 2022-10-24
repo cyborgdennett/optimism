@@ -189,7 +189,7 @@ type AppendSequencerBatchParams struct {
 
 // Write encodes the AppendSequencerBatchParams using the following format:
 //   - should_start_at_element:        5 bytes
-//   - total_elements_to_append:       3 bytes
+//   - total_elements_to_append:       4 bytes
 //   - num_contexts:                   3 bytes
 //   - num_contexts * batch_context: num_contexts * 16 bytes
 //   - [num txs omitted]
@@ -215,7 +215,7 @@ func (p *AppendSequencerBatchParams) Write(
 ) error {
 
 	_ = writeUint64(w, p.ShouldStartAtElement, 5)
-	_ = writeUint64(w, p.TotalElementsToAppend, 3)
+	_ = writeUint64(w, p.TotalElementsToAppend, 4)
 
 	// There must be contexts if there are transactions
 	if len(p.Contexts) == 0 && len(p.Txs) != 0 {
@@ -299,7 +299,7 @@ func (p *AppendSequencerBatchParams) Read(r io.Reader) error {
 	if err := readUint64(r, &p.ShouldStartAtElement, 5); err != nil {
 		return err
 	}
-	if err := readUint64(r, &p.TotalElementsToAppend, 3); err != nil {
+	if err := readUint64(r, &p.TotalElementsToAppend, 4); err != nil {
 		return err
 	}
 

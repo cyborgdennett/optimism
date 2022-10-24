@@ -285,7 +285,7 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
      */
     function appendSequencerBatch() external {
         uint40 shouldStartAtElement;
-        uint24 totalElementsToAppend;
+        uint32 totalElementsToAppend;
         uint24 numContexts;
         assembly {
             shouldStartAtElement := shr(216, calldataload(4))
