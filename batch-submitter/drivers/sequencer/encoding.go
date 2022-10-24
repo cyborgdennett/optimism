@@ -68,16 +68,16 @@ func (c BatchContext) MarkerBatchType() BatchType {
 
 // Write encodes the BatchContext into a 16-byte stream using the following
 // encoding:
-//   - num_sequenced_txs:        3 bytes
-//   - num_subsequent_queue_txs: 3 bytes
+//   - num_sequenced_txs:        4 bytes
+//   - num_subsequent_queue_txs: 4 bytes
 //   - timestamp:                5 bytes
 //   - block_number:             5 bytes
 //
 // Note that writing to a bytes.Buffer cannot
 // error, so errors are ignored here
 func (c *BatchContext) Write(w *bytes.Buffer) {
-	_ = writeUint64(w, c.NumSequencedTxs, 3)
-	_ = writeUint64(w, c.NumSubsequentQueueTxs, 3)
+	_ = writeUint64(w, c.NumSequencedTxs, 4)
+	_ = writeUint64(w, c.NumSubsequentQueueTxs, 4)
 	_ = writeUint64(w, c.Timestamp, 5)
 	_ = writeUint64(w, c.BlockNumber, 5)
 }
@@ -85,15 +85,15 @@ func (c *BatchContext) Write(w *bytes.Buffer) {
 // Read decodes the BatchContext from the passed reader. If fewer than 16-bytes
 // remain, an error is returned. Otherwise the first 16-bytes will be read using
 // the expected encoding:
-//   - num_sequenced_txs:        3 bytes
-//   - num_subsequent_queue_txs: 3 bytes
+//   - num_sequenced_txs:        4 bytes
+//   - num_subsequent_queue_txs: 4 bytes
 //   - timestamp:                5 bytes
 //   - block_number:             5 bytes
 func (c *BatchContext) Read(r io.Reader) error {
-	if err := readUint64(r, &c.NumSequencedTxs, 3); err != nil {
+	if err := readUint64(r, &c.NumSequencedTxs, 4); err != nil {
 		return err
 	}
-	if err := readUint64(r, &c.NumSubsequentQueueTxs, 3); err != nil {
+	if err := readUint64(r, &c.NumSubsequentQueueTxs, 4); err != nil {
 		return err
 	}
 	if err := readUint64(r, &c.Timestamp, 5); err != nil {
@@ -219,11 +219,13 @@ func (p *AppendSequencerBatchParams) Write(
 
 	// There must be contexts if there are transactions
 	if len(p.Contexts) == 0 && len(p.Txs) != 0 {
+		fmt.Println("first")
 		return ErrMalformedBatch
 	}
 
 	// There must be transactions if there are contexts
 	if len(p.Txs) == 0 && len(p.Contexts) != 0 {
+		fmt.Println("Second")
 		return ErrMalformedBatch
 	}
 
@@ -289,7 +291,7 @@ func (p *AppendSequencerBatchParams) Serialize(
 // method will return an error. Otherwise, the stream will be parsed according
 // to the following format:
 //   - should_start_at_element:        5 bytes
-//   - total_elements_to_append:       3 bytes
+//   - total_elements_to_append:       4 bytes
 //   - num_contexts:                   3 bytes
 //   - num_contexts * batch_context: num_contexts * 16 bytes
 //   - [num txs omitted]

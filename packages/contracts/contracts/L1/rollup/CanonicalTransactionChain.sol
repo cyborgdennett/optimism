@@ -38,14 +38,14 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
     uint256 public enqueueL2GasPrepaid;
 
     // Encoding-related (all in bytes)
-    uint256 internal constant BATCH_CONTEXT_SIZE = 16;
+    uint256 internal constant BATCH_CONTEXT_SIZE = 18;
     // slither-disable-next-line unused-state
-    uint256 internal constant BATCH_CONTEXT_LENGTH_POS = 12;
-    uint256 internal constant BATCH_CONTEXT_START_POS = 15;
+    uint256 internal constant BATCH_CONTEXT_LENGTH_POS = 13;
+    uint256 internal constant BATCH_CONTEXT_START_POS = 16;
     // slither-disable-next-line unused-state
     uint256 internal constant TX_DATA_HEADER_SIZE = 3;
     // slither-disable-next-line unused-state
-    uint256 internal constant BYTES_TILL_TX_DATA = 66;
+    uint256 internal constant BYTES_TILL_TX_DATA = 72;
 
     /*************
      * Variables *
@@ -389,7 +389,7 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
      * @return The BatchContext at the specified index.
      */
     function _getBatchContext(uint256 _index) internal pure returns (BatchContext memory) {
-        uint256 contextPtr = 15 + _index * BATCH_CONTEXT_SIZE;
+        uint256 contextPtr = 16 + _index * BATCH_CONTEXT_SIZE;
         // slither-disable-next-line similar-names
         uint256 numSequencedTransactions;
         uint256 numSubsequentQueueTransactions;
@@ -397,10 +397,10 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
         uint256 ctxBlockNumber;
 
         assembly {
-            numSequencedTransactions := shr(232, calldataload(contextPtr))
-            numSubsequentQueueTransactions := shr(232, calldataload(add(contextPtr, 3)))
-            ctxTimestamp := shr(216, calldataload(add(contextPtr, 6)))
-            ctxBlockNumber := shr(216, calldataload(add(contextPtr, 11)))
+            numSequencedTransactions := shr(224, calldataload(contextPtr))
+            numSubsequentQueueTransactions := shr(224, calldataload(add(contextPtr, 4)))
+            ctxTimestamp := shr(216, calldataload(add(contextPtr, 8)))
+            ctxBlockNumber := shr(216, calldataload(add(contextPtr, 13)))
         }
 
         return

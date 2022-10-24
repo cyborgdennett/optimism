@@ -103,9 +103,9 @@ export const sequencerBatch = {
 }
 
 export class Context extends Struct {
-  // 3 bytes
+  // 4 bytes
   public numSequencedTransactions: number = 0
-  // 3 bytes
+  // 4 bytes
   public numSubsequentQueueTransactions: number = 0
   // 5 bytes
   public timestamp: number = 0
@@ -131,12 +131,12 @@ export class Context extends Struct {
   }
 
   getSize(): number {
-    return 16
+    return 18
   }
 
   write(bw: BufferWriter): BufferWriter {
-    bw.writeU24BE(this.numSequencedTransactions)
-    bw.writeU24BE(this.numSubsequentQueueTransactions)
+    bw.writeU32BE(this.numSequencedTransactions)
+    bw.writeU32BE(this.numSubsequentQueueTransactions)
     bw.writeU40BE(this.timestamp)
     bw.writeU40BE(this.blockNumber)
     return bw
@@ -281,7 +281,7 @@ export class BatchedTx extends Struct {
 export class SequencerBatch extends Struct {
   // 5 bytes
   public shouldStartAtElement: number
-  // 3 bytes
+  // 4 bytes
   public totalElementsToAppend: number
   // 3 byte header for count, []Context
   public contexts: Context[]
@@ -401,7 +401,7 @@ export class SequencerBatch extends Struct {
       return -1
     }
 
-    let size = 8 + 3 + 4
+    let size = 4 + 5 + 4 + 3
     for (const context of this.contexts) {
       size += context.getSize()
     }

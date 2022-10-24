@@ -25,11 +25,11 @@ func TestBatchContextEncodeDecode(t *testing.T) {
 	// Test vector is chosen such that each byte maps one to one with a
 	// specific byte of the parsed BatchContext and such that improper
 	// choice of endian-ness for any field will fail.
-	hexEncoding := "000102030405060708090a0b0c0d0e0f"
+	hexEncoding := "0001020303040506060708090a0b0c0d0e0f"
 
 	expBatch := sequencer.BatchContext{
-		NumSequencedTxs:       0x000102,
-		NumSubsequentQueueTxs: 0x030405,
+		NumSequencedTxs:       0x00010203,
+		NumSubsequentQueueTxs: 0x03040506,
 		Timestamp:             0x060708090a,
 		BlockNumber:           0x0b0c0d0e0f,
 	}
