@@ -20,7 +20,7 @@ export enum BatchType {
 
 export interface AppendSequencerBatchParams {
   shouldStartAtElement: number // 5 bytes -- starts at batch
-  totalElementsToAppend: number // 3 bytes -- total_elements_to_append
+  totalElementsToAppend: number // 4 bytes -- total_elements_to_append
   contexts: BatchContext[] // total_elements[fixed_size[]]
   transactions: string[] // total_size_bytes[],total_size_bytes[]
   type?: BatchType
@@ -318,7 +318,7 @@ export class SequencerBatch extends Struct {
     bw.writeBytes(FOUR_BYTE_APPEND_SEQUENCER_BATCH)
 
     bw.writeU40BE(this.shouldStartAtElement)
-    bw.writeU24BE(this.totalElementsToAppend)
+    bw.writeU32BE(this.totalElementsToAppend)
 
     const contexts = this.contexts.slice()
     if (this.type === BatchType.ZLIB) {
@@ -362,7 +362,7 @@ export class SequencerBatch extends Struct {
 
     this.type = BatchType.LEGACY
     this.shouldStartAtElement = br.readU40BE()
-    this.totalElementsToAppend = br.readU24BE()
+    this.totalElementsToAppend = br.readU32BE()
 
     const contexts = br.readU24BE()
     for (let i = 0; i < contexts; i++) {

@@ -26,7 +26,7 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
 
     // L2 tx gas-related
     uint256 public constant MIN_ROLLUP_TX_GAS = 100000;
-    uint256 public constant MAX_ROLLUP_TX_SIZE = 50000;
+    uint256 public constant MAX_ROLLUP_TX_SIZE = 400000;
 
     // The approximate cost of calling the enqueue function
     uint256 public enqueueGasCost;
@@ -45,7 +45,7 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
     // slither-disable-next-line unused-state
     uint256 internal constant TX_DATA_HEADER_SIZE = 3;
     // slither-disable-next-line unused-state
-    uint256 internal constant BYTES_TILL_TX_DATA = 65;
+    uint256 internal constant BYTES_TILL_TX_DATA = 66;
 
     /*************
      * Variables *
@@ -289,8 +289,8 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
         uint24 numContexts;
         assembly {
             shouldStartAtElement := shr(216, calldataload(4))
-            totalElementsToAppend := shr(232, calldataload(9))
-            numContexts := shr(232, calldataload(12))
+            totalElementsToAppend := shr(224, calldataload(9))
+            numContexts := shr(232, calldataload(13))
         }
 
         require(
