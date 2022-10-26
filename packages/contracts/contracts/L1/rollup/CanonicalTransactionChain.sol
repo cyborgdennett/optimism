@@ -26,7 +26,7 @@ contract CanonicalTransactionChain is ICanonicalTransactionChain, Lib_AddressRes
 
     // L2 tx gas-related
     uint256 public constant MIN_ROLLUP_TX_GAS = 100000;
-    uint256 public constant MAX_ROLLUP_TX_SIZE = 50000;
+    uint256 public constant MAX_ROLLUP_TX_SIZE = 500000;
 
     // The approximate cost of calling the enqueue function
     uint256 public enqueueGasCost;
